@@ -50,7 +50,7 @@ def get_book_from_tastedive(st):
     dict["q"] = st
     dict["type"] = "books"
     dict["limit"] = "5"
-    dict["k"] = "341908-Movieand-1GNY8H3A"
+    dict["k"] = "<Your API KEY Goes here>"
     #dict["info"] = "1"
     test_dive_res=requests.get(baseurl, params=dict)
     #j=test_dive_res.json()
@@ -104,7 +104,7 @@ def extract_goodread_rating(bn):
     baseurl = "https://www.goodreads.com/book/title.xml"
     dict = {}
     #dict["format"] = "xml"
-    dict["key"] = "6F9WNNJfzhOvnQmlNwxbA"
+    dict["key"] = "<Your API KEY Goes here>"
     dict["title"] = bn
     goodread_dtl = requests.get(baseurl, params=dict)
     goodread_url = goodread_dtl.url
