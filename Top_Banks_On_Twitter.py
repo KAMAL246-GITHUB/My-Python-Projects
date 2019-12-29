@@ -60,11 +60,15 @@ def Tweet_Sentiment(Search_String):
     It calls other previously defined functions to get the sentiement scores.
     ''' 
     Search_String_Final = Search_String + ' -filter:retweets'
+    
     #Fetch Twitter data and process
+    ## Provide the past date since when you want to analyse(since =<date>). The tweetsitems() can take argument 
+    # It wil be the number of tweets you want to pull. Tweet_mode - extended ensures the complete tweet text is retrieved.
+
     sentiment_score = 0
     for tweet_info in tweepy.Cursor(api.search, q = Search_String_Final, \
-                                    since='2019-12-26', \ #provide the past date since when you want to analyse the tweets
-                                    tweet_mode = "extended").items(): #items() can take argument - It wil be the number of tweets you want to pull. tweet_mode - extended ensures the complete tweet text is retrieved.
+                                    since='2019-12-26', \
+                                    tweet_mode = "extended").items(): 
         sentiment_score += get_tweet_sentiment(tweet_info.full_text)
     return [Search_String, sentiment_score]
 
