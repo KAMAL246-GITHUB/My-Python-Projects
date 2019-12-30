@@ -1,3 +1,8 @@
+########################################################################################################################################
+### Automating Email based action. (Monitor MS outlook inbox for new mails and connect to different linux server to run a script or  ###
+###                                perform specific action upon recieving a mail with a specific subject line)                       ###
+########################################################################################################################################
+
 import win32com.client
 import pythoncom
 import re
