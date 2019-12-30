@@ -30,7 +30,7 @@ class color:
 class Handler_Class(object):
     def OnNewMailEx(self, receivedItemsIDs):
         '''
-        This function monitors the emails and looks for the specific subject lines. 
+        This method monitors  emails and looks for  specific subject lines. 
         Upon recieving a specific mail, it connect to a specified Linux server and executes a shell script to perfrom the required action.
         Once done, it sends a mail to the users.
         '''
