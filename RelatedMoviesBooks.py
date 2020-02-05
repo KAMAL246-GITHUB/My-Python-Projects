@@ -24,7 +24,7 @@ def get_movie_from_tastedive(st):
     dict["q"] = st
     dict["type"] = "movies"
     dict["limit"] = input_limit
-    dict["k"] = "341908-Movieand-1GNY8H3A"
+    dict["k"] = tk
     #dict["info"] = "1"
     test_dive_res=requests.get(baseurl, params=dict)
     # j=test_dive_res.json()
