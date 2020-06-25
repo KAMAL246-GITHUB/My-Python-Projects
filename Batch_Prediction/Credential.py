@@ -1,0 +1,18 @@
+#################### DATABASE (ORACLE) ####################
+
+POGB_CONSTR = '''USERNAME/PASSWORD@DB_NAME'''
+POLN_CONSTR = '''USERNAME/PASSWORD@DB_NAME'''
+
+#################### LINUX ####################
+
+LPS_HOST = 'IP_ADDRESS'
+LPS_USERNAME = 'USERNAME'
+LPS_PASS = 'PASSWORD'
+LPS_PORT = PORT_NUMBER
+
+#################### HPSA LINUX ####################
+
+HPSA_HOST = 'IP_ADDRESS'
+HPSA_USERNAME = 'USERNAME'
+HPSA_PASS = 'PASSWORD'
+HPSA_PORT = PORT_NUMBER
