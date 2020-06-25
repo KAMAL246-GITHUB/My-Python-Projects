@@ -65,8 +65,8 @@ for val in dic.values():
 print (color.BOLD + color.GREEN + "COMPLETED STREAMS\n*****************\n"+ color.END + st_comp)
 print (color.BOLD + color.RED + "PENDING STREAMS\n*****************\n"  + color.END + st_pending)
 
-LRI_STREAMS = re.findall('Stream.* (.*) ecpvm005239',st_pending)
-FDM_STREAMS = re.findall('Stream.* (.*) lon-tdwprd-app',st_pending)
+LRI_STREAMS = re.findall('Stream.* (.*) machine1',st_pending)
+FDM_STREAMS = re.findall('Stream.* (.*) machine2',st_pending)
 LRI_STREAMS = ["%"+i+"%" for i in LRI_STREAMS if (i.startswith('FLM_') and '_RRSLDN' not in i ) ]
 
 ############## Plot the data and show the pending stream status ############
