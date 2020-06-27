@@ -202,7 +202,129 @@ ax.grid(color= '#2A3459')  # bluish dark grey, but slightly lighter than backgro
 
 plt.show();
 
+########################################################################################
+############   Today's file delivery time with barplot                        ##########
+########################################################################################
 
+import IN_OUT_SQL as IS
+import cx_Oracle as co
+import numpy as np
+import Credential as cd
+import pandas as pd
+from  matplotlib import pyplot as plt
+from matplotlib import dates as mdates
+import matplotlib.ticker as tick
+from IPython.display import display, HTML
+import copy
+import math
+import datetime as dt
+import pytz
+%matplotlib inline
+pd.set_option('display.max_columns', 30)
+
+conn = co.connect(cd.POLN_CONSTR)
+query = IS.OUT_SQL_Today2
+df_raw = pd.read_sql(query, con = conn)
+df_today = df_raw.copy(deep=True)
+# flt = df_today['APPLICATION_INSTALLATION'] == 'RRSLDN'
+# df_today.loc[flt, 'COMPLETION_TIME'] = np.nan
+# df_today.dropna(inplace = True)
+df_today.iloc[:, 1:] = df_today.iloc[:, 1:].apply(lambda x : x if x is None else pd.to_datetime(x).dt.strftime('%H%M').astype('float') )
+df_today
+
+
+# #######################  Plot #######################
+
+ind = np.arange(len(df_today))
+fig,ax = plt.subplots(figsize=(15,8))
+ax.clear()
+
+bars = plt.bar(ind, df_today['COMPLETION_TIME'], color = 'forestgreen')
+for bar in bars[:21]:
+    if bar.get_height() > 500:
+        bar.set_color('red')
+for bar in bars[21:25]:
+    if bar.get_height() > 700:
+        bar.set_color('red')
+for bar in bars[25:]:
+    if bar.get_height() > 900:
+        bar.set_color('red')
+
+
+
+
+plt.axhline(xmax = .95,y = 900, color = 'dodgerblue', linestyle = '--', linewidth = 0.75)
+plt.axhline(xmax = .92, y = 700, color = 'maroon', linestyle = '--', linewidth = 0.75)
+plt.axhline(xmax = .77 ,y = 500, color = 'black', linestyle = '--', linewidth = 0.75)
+ax.text(-4, 890, "09 AM SLA", color = 'darkred', fontweight='bold')
+ax.text(-4, 690, "07 AM SLA", color = 'darkred', fontweight='bold')
+ax.text(-4, 490, "05 AM SLA", color = 'darkred', fontweight='bold')
+
+ax.set_xticks(ind)
+ax.set_xticklabels(df_today['APPLICATION_INSTALLATION'].tolist())
+plt.rcParams['axes.edgecolor'] = 'black'
+plt.xticks(rotation = 75)
+plt.style.use('bmh')
+plt.box(False)
+# ax.grid(False) #axis = 'x', alpha =0.05) #Remove the grid lines by passing argument to False or make it less prominent via alpha value
+plt.xlabel('\nStreams', fontsize = 15)
+plt.ylabel('\n\nTime of Delivery in 2400 HRS Format (GMT/BST as applicable)', fontsize = 12)
+ax.yaxis.set_label_position("right") # Shift y label to right
+# ax.yaxis.tick_right() # Put the y tick labels to right
+ax.tick_params(bottom = False, left = False, right = False)
+plt.setp(ax.get_yticklabels(), color="lightgrey")
+plt.title(f''' LRI readiness time Today
+''', fontsize = 15)
+
+def anotate_bars(bar):
+    '''
+    This function helps annotate the bars with data labels in the desired position.
+    '''
+    def say_h(x,num):
+            #line 77 to 82 define the SLA variable based on which streams are passed
+            if (num > 20 and num < 25):
+                SLA = 700
+            elif (num >= 25):
+                SLA = 900
+            else:
+                SLA = 500
+            
+            #Below if else block defines what comment to be put instead of bar if the stream has not completed yet    
+            if math.isnan(x):
+                now = int(dt.datetime.now(tz=pytz.timezone('Europe/London')).strftime('%H%M')) # What is the time now ? strip only hours and minutes and then convert it to integer
+                comment = input(f"Enter the ETA or Reason of delay for {(df_raw.loc[num,'APPLICATION_INSTALLATION'])} : ")
+                
+                # Make the colour of the comment red if stream has not been deliverd yet and already breached SLA else blue
+                if now > SLA:
+                    c = 'red'
+                else:
+                    c = 'blue' #'#900C3F' # "#900C3F" is the hexa color code for Maroon - ref https://htmlcolorcodes.com/
+                    
+                if comment.strip()=='':
+                    return ('Pending', c) 
+                else:
+                    return (comment, c)
+            else:
+                return (str(df_raw.loc[num,'COMPLETION_TIME']), 'black')
+    def say_y(n):
+            if math.isnan(n):
+                return 0
+            else:
+                return n
+        
+    for num, bar in enumerate(bars):
+        h = bar.get_height() # Get Height of the bars
+        text, col = say_h(h,num) # Text and colour of the text to be annotated
+        x_pos = bar.get_x()+bar.get_width()/2 # Xpostion of the text
+        y_pos = say_y(h)+15  # Ypostion of the text
+        ax.text(x_pos,y_pos, text ,ha='center', va='bottom', color = col, rotation = 90, fontsize = 12) #, fontweight='bold')
+
+anotate_bars(bar)
+plt.show();
+
+#Sample Comments
+# ABC Delay ETA 1000 HRS BST
+# ETA 1000 HRS BST 
 
 ########################################################################################
 ############   Today's file delivery time with scatterplot                    ##########
